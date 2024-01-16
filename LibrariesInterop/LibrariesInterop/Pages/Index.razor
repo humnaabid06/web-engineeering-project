@@ -1,0 +1,23 @@
+﻿@using HeyRed.MarkdownSharp
+@inject IJSRuntime JsRuntime
+@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<textarea style="width: 100%" rows="5" @bind="@SourceText"></textarea>
+<button @onclick="@Convert">Convert</button>
+<p @ref="Target"/>
+
+@code {
+    string SourceText { get; set; }
+    Markdown markdown = new Markdown();
+    ElementReference Target;
+
+    void Convert()
+    {
+        var html = markdown.Transform(SourceText);
+        JsRuntime.InvokeAsync<object>("markupExtensions.toHtml", html, Target);
+    }
+}
